@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inside Discovery Form</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --nutanix: #7c3aed;
+    --nutanix-dark: #6d28d9;
+    --nutanix-mid: #8b5cf6;
+    --nutanix-light: #f3e8ff;
+    --nutanix-border: #d8b4fe;
+    --ink: #1a1a2e;
+    --ink-mid: #4a4a6a;
+    --ink-light: #8888aa;
+    --rule: #e2e2f0;
+    --rule-light: #f0f0f8;
+    --page: #f8f7fc;
+    --white: #ffffff;
+    --green: #15803d;
+    --green-bg: #f0fdf4;
+    --amber: #b45309;
+    --amber-bg: #fffbeb;
+    --radius: 6px;
+    --shadow: 0 1px 4px rgba(107,33,168,0.07), 0 4px 16px rgba(107,33,168,0.05);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--page);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    background: #6d28d9;
+    color: var(--white);
+    padding: 28px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left h1 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .nutanix-logo {
+    opacity: 0.9;
+  }
+  .nutanix-logo svg { display: block; }
+
+  /* ── META BAR ── */
+  .meta-bar {
+    background: var(--white);
+    border-bottom: 2px solid var(--nutanix-border);
+    padding: 18px 48px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr 0.9fr 1fr 1fr;
+    gap: 20px;
+  }
+  .meta-field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--nutanix);
+    margin-bottom: 4px;
+  }
+  .meta-field input,
+  .meta-field select {
+    width: 100%;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .meta-field input:focus,
+  .meta-field select:focus {
+    border-color: var(--nutanix);
+    box-shadow: 0 0 0 3px var(--nutanix-light);
+  }
+
+  /* ── BODY ── */
+  .doc-body {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 48px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* ── SIZING RESULT CARD ── */
+  .result-card {
+    background: var(--white);
+    border: 2px solid var(--nutanix-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(107,33,168,0.10);
+    display: none;
+  }
+  .result-card.visible { display: block; }
+  .result-head {
+    background: #6d28d9;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .result-body {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .result-block {
+    background: var(--nutanix-light);
+    border: 1px solid var(--nutanix-border);
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+  .result-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--nutanix);
+    margin-bottom: 4px;
+  }
+  .result-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--nutanix-dark);
+  }
+  .result-sub {
+    font-size: 12px;
+    color: var(--ink-mid);
+    margin-top: 2px;
+  }
+  .result-license {
+    background: var(--green-bg);
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+  .result-license .result-label { color: var(--green); }
+  .result-license .result-value { font-size: 16px; color: var(--green); }
+  .ise-note {
+    grid-column: 1 / -1;
+    font-size: 11.5px;
+    color: var(--ink-light);
+    font-style: italic;
+    padding-top: 2px;
+  }
+  .result-warning {
+    background: var(--amber-bg);
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--amber);
+    grid-column: 1 / -1;
+    display: none;
+  }
+  .result-warning.show { display: block; }
+
+  /* ── SIZING DIAGRAM ── */
+  .diagram-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .diagram-head {
+    background: #6d28d9;
+    color: white;
+    padding: 13px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .diagram-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .diagram-body {
+    padding: 20px 24px;
+  }
+  .size-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .size-box {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1.5px solid var(--rule);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .size-box.active {
+    border-color: var(--nutanix);
+    box-shadow: 0 0 0 3px var(--nutanix-light);
+  }
+  .size-box-head {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .size-box-head.small  { background: #8b5cf6; }
+  .size-box-head.medium { background: #7c3aed; }
+  .size-box-head.large  { background: #6d28d9; }
+  .size-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    padding: 2px 7px;
+  }
+  .size-box-body {
+    padding: 12px 14px;
+    background: var(--white);
+  }
+  .size-spec {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--rule-light);
+    font-size: 12.5px;
+  }
+  .size-spec:last-child { border-bottom: none; }
+  .spec-label { color: var(--ink-light); font-size: 11px; }
+  .spec-val { font-weight: 500; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--ink); }
+  .size-node {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: var(--rule-light);
+    border-radius: 5px;
+    font-size: 11px;
+    color: var(--ink-mid);
+    line-height: 1.6;
+  }
+  .size-node strong { color: var(--nutanix); font-size: 11px; }
+
+  /* License flow */
+  .license-flow {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .lic-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .lic-pill {
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    font-family: 'DM Mono', monospace;
+  }
+  .lic-pill.str  { background: #ede9fe; color: #6d28d9; }
+  .lic-pill.pro  { background: #dbeafe; color: #1d4ed8; }
+  .lic-pill.ult  { background: #fce7f3; color: #9d174d; }
+  .lic-pill.ncm-str { background: #d1fae5; color: #065f46; }
+  .lic-pill.ncm-pro { background: #dcfce7; color: #166534; }
+  .lic-trigger { color: var(--ink-light); font-size: 11px; font-style: italic; }
+  .flow-divider {
+    height: 1px;
+    background: var(--rule);
+    margin: 8px 0;
+  }
+  .flow-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-light);
+    margin-bottom: 4px;
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 20px;
+    background: #6d28d9;
+    color: var(--white);
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 4px;
+    padding: 2px 7px;
+    letter-spacing: 0.06em;
+  }
+  .section-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  /* ── QUESTION ROWS ── */
+  .q-row {
+    display: grid;
+    grid-template-columns: 32px 1fr 200px;
+    align-items: start;
+    border-bottom: 1px solid var(--rule-light);
+    padding: 13px 20px;
+    transition: background 0.1s;
+  }
+  .q-row:last-child { border-bottom: none; }
+  .q-row:hover { background: #faf8ff; }
+
+  .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--nutanix-mid);
+    padding-top: 2px;
+    font-weight: 500;
+  }
+  .q-text { font-size: 13.5px; color: var(--ink); padding-right: 16px; padding-top: 2px; }
+  .q-hint { font-size: 11.5px; color: var(--ink-light); margin-top: 2px; }
+
+  .q-input input,
+  .q-input select,
+  .q-input textarea {
+    width: 100%;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 7px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .q-input input:focus,
+  .q-input select:focus,
+  .q-input textarea:focus {
+    border-color: var(--nutanix);
+    box-shadow: 0 0 0 3px var(--nutanix-light);
+  }
+  .q-input .unit {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--ink-light);
+    font-family: 'DM Mono', monospace;
+  }
+
+  input[type=number] { -moz-appearance: textfield; }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  .q-row.disc-wrap {
+    display: block;
+    padding: 13px 20px;
+  }
+  .q-row.disc-wrap .q-header {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    margin-bottom: 7px;
+  }
+  .q-row.disc-wrap textarea {
+    width: 100%;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--white);
+    resize: vertical;
+    min-height: 50px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .q-row.disc-wrap textarea:focus {
+    border-color: var(--nutanix);
+    box-shadow: 0 0 0 3px var(--nutanix-light);
+  }
+  .sub-q { font-size: 12px; color: var(--ink-mid); margin-bottom: 4px; margin-top: 6px; }
+  .sub-q-group { display: flex; flex-direction: column; gap: 6px; }
+
+  /* ── PRINT BAR ── */
+  .print-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--white);
+    border-top: 2px solid var(--nutanix-border);
+    padding: 12px 48px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+  }
+  .print-hint { font-size: 12px; color: var(--ink-light); }
+  .btn-print {
+    background: #6d28d9;
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px 22px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn-print:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-reset {
+    background: none;
+    color: var(--ink-light);
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 9px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-reset:hover { border-color: var(--nutanix); color: var(--nutanix); }
+
+  /* ── PRINT ── */
+  @media print {
+    @page { margin: 0.4in 0.4in; size: letter; }
+    html { zoom: 0.87; }
+    body { background: white; font-size: 10.5px; }
+    .print-bar { display: none !important; }
+    .meta-bar { padding: 8px 16px; break-inside: avoid; }
+    .doc-header { padding: 10px 16px; break-inside: avoid; }
+    .doc-body { padding: 10px 16px 16px; gap: 8px; }
+    .section-card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+    .q-row { break-inside: avoid; }
+    .q-row.disc-wrap { break-inside: avoid; }
+    .result-card { break-inside: avoid; box-shadow: none; }
+    .diagram-card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+    .diagram-body { padding: 12px 16px; }
+    .q-row { padding: 5px 12px; }
+    .q-row.disc-wrap { padding: 6px 12px; }
+    .q-row:hover { background: none; }
+    textarea { min-height: 22px !important; font-size: 10.5px; }
+    input, select, textarea { border-color: #ccc !important; box-shadow: none !important; font-size: 10.5px; padding: 4px 7px; }
+    .size-grid { gap: 6px; }
+    .size-box-head { padding: 7px 10px; font-size: 11px; }
+    .size-box-body { padding: 8px 10px; }
+    .size-spec { padding: 2px 0; font-size: 10.5px; }
+    .size-node { font-size: 9.5px; padding: 5px 8px; margin-top: 6px; line-height: 1.4; }
+    .result-body { padding: 10px; gap: 8px; }
+    .result-value { font-size: 16px; }
+    .license-flow { gap: 4px; }
+    .lic-row { font-size: 10.5px; }
+    .lic-pill { font-size: 9.5px; padding: 2px 8px; }
+    .flow-section-label { font-size: 9px; }
+    .section-head { padding: 9px 14px; }
+    .section-num { font-size: 9px; }
+    .section-title { font-size: 10px; }
+    .q-hint { font-size: 10px; }
+    .q-text { font-size: 12px; }
+    .sub-q { font-size: 10.5px; }
+    .result-label { font-size: 9px; }
+    .result-sub { font-size: 10.5px; }
+    .ise-note { font-size: 10px; }
+    .doc-header, .section-head, .result-head, .diagram-head { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* ── LOGIN OVERLAY ── */
+  #login-screen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #6d28d9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+  }
+  .login-box {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    width: 340px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  .login-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .login-title { font-size: 18px; font-weight: 600; color: #1a1a2e; margin-bottom: 6px; }
+  .login-sub { font-size: 12px; color: #8888aa; margin-bottom: 24px; }
+  .login-input {
+    width: 100%;
+    border: 1.5px solid #e2e2f0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .login-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px #f3e8ff; }
+  .login-btn {
+    width: 100%;
+    background: #6d28d9;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .login-btn:hover { opacity: 0.9; }
+  .login-error { color: #dc2626; font-size: 12px; margin-top: 10px; display: none; }
+
+  /* ── CUSTOM DROPDOWN ── */
+  .custom-dd { position: relative; width: 100%; }
+  .dd-trigger {
+    width: 100%;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    background: var(--white);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.15s;
+    user-select: none;
+  }
+  .dd-trigger:hover { border-color: var(--nutanix); }
+  .custom-dd.open .dd-trigger { border-color: var(--nutanix); box-shadow: 0 0 0 3px var(--nutanix-light); }
+  .dd-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0; right: 0;
+    background: white;
+    border: 1.5px solid var(--nutanix-border);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(107,33,168,0.15);
+    z-index: 999;
+  }
+  .custom-dd.open .dd-panel { display: block; }
+  .dd-search {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    padding: 8px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+    background: var(--rule-light);
+  }
+  .dd-items { max-height: 200px; overflow-y: auto; }
+  .dd-item {
+    padding: 8px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--ink);
+    transition: background 0.1s;
+  }
+  .dd-item:hover { background: var(--nutanix-light); color: var(--nutanix-dark); }
+  .dd-item.hidden { display: none; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">window.addEventListener('scroll', function() {
+  const btn = document.getElementById('scroll-up-btn');
+  if (!btn) return;
+  if (window.scrollY > 300) {
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'all';
+    btn.style.transform = 'translateY(0)';
+  } else {
+    btn.style.opacity = '0';
+    btn.style.pointerEvents = 'none';
+  }
+});
+
+function toggleDD(id) {
+  const dd = document.getElementById(id + '-dd');
+  const isOpen = dd.classList.contains('open');
+  document.querySelectorAll('.custom-dd.open').forEach(d => d.classList.remove('open'));
+  if (!isOpen) {
+    dd.classList.add('open');
+    setTimeout(() => dd.querySelector('.dd-search').focus(), 50);
+  }
+}
+
+function filterDD(id, query) {
+  query = query.toLowerCase();
+  document.querySelectorAll('#' + id + '-items .dd-item').forEach(item => {
+    item.classList.toggle('hidden', !item.textContent.toLowerCase().includes(query));
+  });
+}
+
+function selectDD(id, value) {
+  const otherId = id.replace('-name', '') + '-other';
+  const otherInput = document.getElementById(otherId);
+  if (value === 'Other') {
+    document.getElementById(id).value = '';
+    document.getElementById(id + '-label').textContent = 'Type a name...';
+    document.getElementById(id + '-label').style.color = 'var(--nutanix)';
+    if (otherInput) {
+      otherInput.style.display = 'block';
+      otherInput.focus();
+      // When done typing, update trigger label and hide box
+      otherInput.onblur = function() {
+        const typed = otherInput.value.trim();
+        if (typed) {
+          document.getElementById(id).value = typed;
+          document.getElementById(id + '-label').textContent = typed;
+          document.getElementById(id + '-label').style.color = 'var(--ink)';
+          otherInput.style.display = 'none';
+        }
+      };
+      otherInput.onkeydown = function(e) {
+        if (e.key === 'Enter') { otherInput.blur(); }
+      };
+    }
+  } else {
+    document.getElementById(id).value = value;
+    document.getElementById(id + '-label').textContent = value;
+    document.getElementById(id + '-label').style.color = 'var(--ink)';
+    if (otherInput) { otherInput.style.display = 'none'; otherInput.value = ''; }
+  }
+  document.getElementById(id + '-dd').classList.remove('open');
+  calcSize();
+}
+
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.custom-dd.open').forEach(dd => {
+    if (!dd.contains(e.target)) dd.classList.remove('open');
+  });
+});
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">window.addEventListener('scroll', function() {
+  const btn = document.getElementById('scroll-up-btn');
+  if (!btn) return;
+  if (window.scrollY > 300) {
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'all';
+    btn.style.transform = 'translateY(0)';
+  } else {
+    btn.style.opacity = '0';
+    btn.style.pointerEvents = 'none';
+  }
+});
+
+function toggleDD(id) {
+  const dd = document.getElementById(id + '-dd');
+  const isOpen = dd.classList.contains('open');
+  document.querySelectorAll('.custom-dd.open').forEach(d => d.classList.remove('open'));
+  if (!isOpen) {
+    dd.classList.add('open');
+    setTimeout(() => dd.querySelector('.dd-search').focus(), 50);
+  }
+}
+
+function filterDD(id, query) {
+  query = query.toLowerCase();
+  document.querySelectorAll('#' + id + '-items .dd-item').forEach(item => {
+    item.classList.toggle('hidden', !item.textContent.toLowerCase().includes(query));
+  });
+}
+
+function selectDD(id, value) {
+  const otherId = id.replace('-name', '') + '-other';
+  const otherInput = document.getElementById(otherId);
+  if (value === 'Other') {
+    document.getElementById(id).value = '';
+    document.getElementById(id + '-label').textContent = 'Type a name...';
+    document.getElementById(id + '-label').style.color = 'var(--nutanix)';
+    if (otherInput) {
+      otherInput.style.display = 'block';
+      otherInput.focus();
+      // When done typing, update trigger label and hide box
+      otherInput.onblur = function() {
+        const typed = otherInput.value.trim();
+        if (typed) {
+          document.getElementById(id).value = typed;
+          document.getElementById(id + '-label').textContent = typed;
+          document.getElementById(id + '-label').style.color = 'var(--ink)';
+          otherInput.style.display = 'none';
+        }
+      };
+      otherInput.onkeydown = function(e) {
+        if (e.key === 'Enter') { otherInput.blur(); }
+      };
+    }
+  } else {
+    document.getElementById(id).value = value;
+    document.getElementById(id + '-label').textContent = value;
+    document.getElementById(id + '-label').style.color = 'var(--ink)';
+    if (otherInput) { otherInput.style.display = 'none'; otherInput.value = ''; }
+  }
+  document.getElementById(id + '-dd').classList.remove('open');
+  calcSize();
+}
+
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.custom-dd.open').forEach(dd => {
+    if (!dd.contains(e.target)) dd.classList.remove('open');
+  });
+});
+
+</script>
+</head>
+<body class="locked">
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg width="24" height="24" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,0 14,0 20,10 26,0 40,0 26,22 40,40 26,40 20,30 14,40 0,40 14,18" fill="#7c3aed"/>
+      </svg>
+      <span style="font-size:18px;font-weight:700;color:#7c3aed;">nutanix</span>
+    </div>
+    <div class="login-title">Inside Discovery Form</div>
+    <div class="login-sub">Enter your password to continue</div>
+    <input class="login-input" type="password" id="login-password" placeholder="Password" onkeydown="if(event.key==='Enter') checkLogin()">
+    <button class="login-btn" onclick="checkLogin()">Continue</button>
+    <div class="login-error" id="login-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="header-left">
+    <h1>Nutanix Inside Discovery Form</h1>
+  </div>
+  <div class="nutanix-logo">
+    <!-- Nutanix official purple logo on white pill -->
+    <div style="background:white;border-radius:10px;padding:10px 20px;display:flex;align-items:center;gap:10px;">
+      <!-- Nutanix X mark in purple -->
+      <svg width="28" height="28" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,0 14,0 20,10 26,0 40,0 26,22 40,40 26,40 20,30 14,40 0,40 14,18" fill="#7c3aed"/>
+      </svg>
+      <span style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:#7c3aed;letter-spacing:-0.5px;">nutanix</span>
+    </div>
+  </div>
+</div>
+
+<!-- META BAR -->
+<div class="meta-bar">
+  <div class="meta-field">
+    <label>Customer Name</label>
+    <input type="text" id="customer-name" placeholder="Acme Corporation">
+  </div>
+  <div class="meta-field">
+    <label>Opportunity ID</label>
+    <input type="text" id="opp-id" placeholder="OPP-00000" style="font-family:'DM Mono',monospace;">
+  </div>
+  <div class="meta-field">
+    <label>Partner Name <span style="font-size:10px;color:var(--ink-light);font-weight:400;">(optional)</span></label>
+    <input type="text" id="partner-name" placeholder="">
+  </div>
+  <div class="meta-field">
+    <label>IAE Name</label>
+    <div class="custom-dd" id="iae-name-dd">
+      <div class="dd-trigger" onclick="toggleDD('iae-name')" id="iae-name-trigger">
+        <span id="iae-name-label" style="color:var(--ink-light);">— Select IAE —</span>
+        <span style="color:var(--ink-light);">▾</span>
+      </div>
+      <div class="dd-panel" id="iae-name-panel">
+        <input type="text" class="dd-search" placeholder="Search..." oninput="filterDD('iae-name', this.value)" onclick="event.stopPropagation()">
+        <div class="dd-items" id="iae-name-items">
+        <div class="dd-item" onclick="selectDD('iae-name', 'Adan Arredondo')">Adan Arredondo</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Alec Ashby')">Alec Ashby</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Audrey Bradyhouse')">Audrey Bradyhouse</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Austin Kruger')">Austin Kruger</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Bakari Cook')">Bakari Cook</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Brent Keller')">Brent Keller</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Brian Mula')">Brian Mula</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Brock Jennings')">Brock Jennings</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Colby Moore')">Colby Moore</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Courtney Dobson')">Courtney Dobson</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'DJ Godette')">DJ Godette</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Dom Boykin')">Dom Boykin</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Eric Ventimiglia')">Eric Ventimiglia</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Erik Werner')">Erik Werner</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Greg Garneau')">Greg Garneau</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Gunnar Gillen')">Gunnar Gillen</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Jack Hills')">Jack Hills</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Jack Klerekoper')">Jack Klerekoper</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Jack Page')">Jack Page</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Jake Owen')">Jake Owen</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'James Leane')">James Leane</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'James Suggs')">James Suggs</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Jeff Leung')">Jeff Leung</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Jevon Brun')">Jevon Brun</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Jiani Bryant')">Jiani Bryant</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Jordan Hollard')">Jordan Hollard</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Josh Bryant')">Josh Bryant</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Joshua Warren')">Joshua Warren</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Justine Baird')">Justine Baird</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Kelly Specht')">Kelly Specht</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Kevin Edwards')">Kevin Edwards</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Kevin Marzo')">Kevin Marzo</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Lauren Yang')">Lauren Yang</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Mason Smith')">Mason Smith</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Matt Wilson')">Matt Wilson</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Nick Lami')">Nick Lami</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Nick Oppedisano')">Nick Oppedisano</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Paul Richie')">Paul Richie</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Robby Munne')">Robby Munne</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Ryan Farrell')">Ryan Farrell</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Sean Pinkstaff')">Sean Pinkstaff</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Stephen Walkowski')">Stephen Walkowski</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Steve Chase')">Steve Chase</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Theo Hayes')">Theo Hayes</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Trevor Hynes')">Trevor Hynes</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Troy Ito')">Troy Ito</div>
+        <div class="dd-item" onclick="selectDD('iae-name', 'Zach Morin')">Zach Morin</div>
+        </div>
+              <div class="dd-item" onclick="selectDD('iae-name', 'Other')">Other — type a name</div>
+      </div>
+    </div>
+    <input type="hidden" id="iae-name">
+    <input type="text" id="iae-other" placeholder="Type IAE name..." 
+      style="display:none;width:100%;margin-top:6px;border:1.5px solid var(--nutanix-border);border-radius:var(--radius);padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:var(--nutanix-light);"
+      oninput="document.getElementById('iae-name').value=this.value">
+  </div>
+  <div class="meta-field">
+    <label>ISE Name</label>
+    <div class="custom-dd" id="ise-name-dd">
+      <div class="dd-trigger" onclick="toggleDD('ise-name')" id="ise-name-trigger">
+        <span id="ise-name-label" style="color:var(--ink-light);">— Select ISE —</span>
+        <span style="color:var(--ink-light);">▾</span>
+      </div>
+      <div class="dd-panel" id="ise-name-panel">
+        <input type="text" class="dd-search" placeholder="Search..." oninput="filterDD('ise-name', this.value)" onclick="event.stopPropagation()">
+        <div class="dd-items" id="ise-name-items">
+        <div class="dd-item" onclick="selectDD('ise-name', 'Abhish Singh')">Abhish Singh</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Anuj Lakhani')">Anuj Lakhani</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Austin Stone')">Austin Stone</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Brennley Williams')">Brennley Williams</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Carlos Richardson')">Carlos Richardson</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'DJ McDonell')">DJ McDonell</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Gary Foster')">Gary Foster</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Jessica Jung')">Jessica Jung</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Matt Gerlach')">Matt Gerlach</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Mike Thomas')">Mike Thomas</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Miriam Bautista')">Miriam Bautista</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Natalie Burke')">Natalie Burke</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Paul Bush')">Paul Bush</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Robin Batsuli')">Robin Batsuli</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Ryan Figler')">Ryan Figler</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Sreeja Nandakumar')">Sreeja Nandakumar</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Teri Hathaway')">Teri Hathaway</div>
+        <div class="dd-item" onclick="selectDD('ise-name', 'Lizi Singletary')">Lizi Singletary</div>
+        </div>
+              <div class="dd-item" onclick="selectDD('ise-name', 'Other')">Other — type a name</div>
+      </div>
+    </div>
+    <input type="hidden" id="ise-name">
+    <input type="text" id="ise-other" placeholder="Type ISE name..."
+      style="display:none;width:100%;margin-top:6px;border:1.5px solid var(--nutanix-border);border-radius:var(--radius);padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:var(--nutanix-light);"
+      oninput="document.getElementById('ise-name').value=this.value">
+  </div>
+</div>
+
+<!-- FORM BODY -->
+<div class="doc-body">
+
+  <!-- ── LIVE RESULT CARD (hidden until resources filled) ── -->
+  <div class="result-card" id="result-card">
+    <div class="result-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Live Sizing Recommendation — ISE to confirm final configuration
+    </div>
+    <div class="result-body">
+      <div class="result-block">
+        <div class="result-label">Recommended Bundle</div>
+        <div class="result-value" id="res-bundle">—</div>
+        <div class="result-sub" id="res-driver">Enter resource data above</div>
+      </div>
+      <div class="result-block">
+        <div class="result-label">Node Count</div>
+        <div class="result-value" id="res-nodes">—</div>
+        <div class="result-sub" id="res-model">—</div>
+      </div>
+      <div class="result-license">
+        <div class="result-label">NCI License Suggestion</div>
+        <div class="result-value" id="res-nci">—</div>
+        <div class="result-sub" id="res-nci-reason">Based on feature selections</div>
+      </div>
+      <div class="result-license" style="background:#f0f9ff;border-color:#bae6fd;">
+        <div class="result-label" style="color:#0369a1;">NCM LICENSE SUGGESTION</div>
+        <div class="result-value" id="res-ncm" style="color:#0369a1;font-size:16px;">—</div>
+        <div class="result-sub" id="res-ncm-reason">Based on automation selections</div>
+      </div>
+      <div class="result-warning" id="res-warning">
+        ⚠️ <strong>SQL VMs detected</strong> — Large or custom sizing may be required. ISE review recommended.
+      </div>
+      <div class="ise-note">* Suggested sizing based on resource inputs. ISE to validate and determine final configuration, node count, and licensing.</div>
+    </div>
+  </div>
+
+  <!-- ── SIZING DIAGRAM ── -->
+  <div class="diagram-card">
+    <div class="diagram-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <span class="diagram-title">Velocity Bundle Sizing Reference</span>
+    </div>
+    <div class="diagram-body">
+
+      <!-- Size boxes -->
+      <div class="size-grid">
+
+        <div class="size-box" id="box-small">
+          <div class="size-box-head small">
+            Small Bundle <span class="size-badge">3 nodes</span>
+          </div>
+          <div class="size-box-body">
+            <div class="size-spec"><span class="spec-label">vCPUs</span><span class="spec-val">≤ 130</span></div>
+            <div class="size-spec"><span class="spec-label">Memory</span><span class="spec-val">≤ 910 GB</span></div>
+            <div class="size-spec"><span class="spec-label">Useable</span><span class="spec-val">≤ 24 TiB</span></div>
+            <div class="size-node">
+              <strong>Node:</strong> NX-1175S-G10<br>
+              Intel 6517P (16c @ 3.2GHz)<br>
+              8×64GB · 2×15.36TB NVMe<br>
+              1×Dual 10/25GbE
+            </div>
+          </div>
+        </div>
+
+        <div class="size-box" id="box-medium">
+          <div class="size-box-head medium">
+            Medium Bundle <span class="size-badge">4 nodes</span>
+          </div>
+          <div class="size-box-body">
+            <div class="size-spec"><span class="spec-label">vCPUs</span><span class="spec-val">≤ 350</span></div>
+            <div class="size-spec"><span class="spec-label">Memory</span><span class="spec-val">≤ 1,382 GB</span></div>
+            <div class="size-spec"><span class="spec-label">Useable</span><span class="spec-val">≤ 73 TiB</span></div>
+            <div class="size-node">
+              <strong>Node:</strong> NX-1175S-G10<br>
+              Intel 6527P (24c @ 3.0GHz)<br>
+              8×64GB · 24×15.36TB NVMe<br>
+              1×Dual 10/25GbE
+            </div>
+          </div>
+        </div>
+
+        <div class="size-box" id="box-large">
+          <div class="size-box-head large">
+            Large Bundle <span class="size-badge">4 nodes</span>
+          </div>
+          <div class="size-box-body">
+            <div class="size-spec"><span class="spec-label">vCPUs</span><span class="spec-val">≤ 478</span></div>
+            <div class="size-spec"><span class="spec-label">Memory</span><span class="spec-val">≤ 2,894 GB</span></div>
+            <div class="size-spec"><span class="spec-label">Useable</span><span class="spec-val">≤ 110 TiB</span></div>
+            <div class="size-node">
+              <strong>Node:</strong> NX-8170-G10<br>
+              Dual Intel 6727P (24c @ 3.0GHz)<br>
+              16×64GB · 6×15.36TB NVMe<br>
+              1×Dual 10/25GbE
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /size-grid -->
+
+      <!-- License logic -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px;">
+
+        <div>
+          <div class="flow-section-label">NCI Licensing Logic</div>
+          <div class="license-flow">
+            <div class="lic-row"><span class="lic-pill str">NCI Starter</span><span class="lic-trigger">Baseline — no advanced features</span></div>
+            <div class="lic-row"><span class="lic-pill pro">NCI Pro w/ Adv Rep</span><span class="lic-trigger">+ 1HR RPO replication</span></div>
+            <div class="lic-row"><span class="lic-pill ult">NCI Ultimate</span><span class="lic-trigger">+ MicroSeg, Encryption, or DRO/NearSync/Sync</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flow-section-label">NCM Licensing Logic</div>
+          <div class="license-flow">
+            <div class="lic-row"><span class="lic-pill ncm-str">No NCM</span><span class="lic-trigger">Baseline — no automation selected</span></div>
+            <div class="lic-row"><span class="lic-pill ncm-str">NCM Starter</span><span class="lic-trigger">AIOps &amp; Visibility — Capacity Planning, VM Right-sizing, X-Play</span></div>
+            <div class="lic-row"><span class="lic-pill ncm-pro">NCM Pro</span><span class="lic-trigger">Adds IaaS Blueprints, Self-Service Portal, Cost Governance</span></div>
+            <div class="lic-row"><span class="lic-pill ult">NCM Ultimate</span><span class="lic-trigger">Adds App Lifecycle, Security Central, Multi-cloud</span></div>
+          </div>
+          <div style="margin-top:10px;font-size:11px;color:var(--ink-light);font-style:italic;">NCP (NCI+NCM) available as combined license — ISE to advise.</div>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /diagram-card -->
+
+  <!-- ── SECTION A: DISCOVERY ── -->
+  <div class="section-card">
+    <div class="section-head">
+      <span class="section-num">A</span>
+      <span class="section-title">Current Infrastructure / Virtualization / Cloud</span>
+    </div>
+    <div class="section-body">
+
+      <div class="q-row disc-wrap">
+        <div class="q-header"><span class="q-num">1</span><span class="q-text">What is your current hypervisor footprint?</span></div>
+        <div class="sub-q-group">
+          <div class="sub-q">Are you facing any challenges with licensing costs or renewal uncertainty (specifically Broadcom/VMware)?</div>
+          <textarea placeholder="Describe hypervisor environment and licensing challenges…"></textarea>
+          <div class="sub-q">When do your licenses expire?</div>
+          <textarea style="min-height:38px;" placeholder="License expiration date(s)…"></textarea>
+        </div>
+      </div>
+
+      <div class="q-row disc-wrap">
+        <div class="q-header"><span class="q-num">2</span><span class="q-text">How many Hosts do you have in your DataCenters today? <span class="q-hint">(Compute)</span></span></div>
+        <textarea style="min-height:38px;" placeholder="Host count and DC locations…"></textarea>
+      </div>
+
+      <div class="q-row disc-wrap">
+        <div class="q-header"><span class="q-num">3</span><span class="q-text">What vendor do you use today to store your data? <span class="q-hint">(Storage)</span></span></div>
+        <textarea style="min-height:38px;" placeholder="Storage vendor(s) and relevant details…"></textarea>
+      </div>
+
+      <div class="q-row disc-wrap">
+        <div class="q-header"><span class="q-num">4</span><span class="q-text">What is the current life cycle of your infrastructure? <span class="q-hint">(Refresh Cycle / HW Life)</span></span></div>
+        <textarea style="min-height:38px;" placeholder="HW age, refresh cadence, upcoming EOL…"></textarea>
+      </div>
+
+      <div class="q-row disc-wrap">
+        <div class="q-header"><span class="q-num">5</span><span class="q-text">How many VMs do you have today?</span></div>
+        <textarea style="min-height:38px;" placeholder="Total VM count…"></textarea>
+      </div>
+
+      <div class="q-row disc-wrap">
+        <div class="q-header"><span class="q-num">6</span><span class="q-text">What is your current DR Strategy?</span></div>
+        <textarea placeholder="Current DR approach, RTO/RPO targets, tools used…"></textarea>
+      </div>
+
+      <div class="q-row disc-wrap">
+        <div class="q-header"><span class="q-num">7</span><span class="q-text">Do you use MS SQL? <span class="q-hint">Will require Large or custom sizing</span></span></div>
+        <textarea style="min-height:38px;" placeholder="SQL usage details…"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION B: RESOURCES ── -->
+  <div class="section-card">
+    <div class="section-head">
+      <span class="section-num">B</span>
+      <span class="section-title">Resources — RVTools / Collector Data</span>
+    </div>
+    <div class="section-body">
+
+      <div class="q-row">
+        <span class="q-num">1</span>
+        <div><div class="q-text"># User VMs</div><div class="q-hint">Total powered-on virtual machines</div></div>
+        <div class="q-input">
+          <input type="number" id="inp-vms" placeholder="e.g. 25" min="0" oninput="calcSize()">
+          <span class="unit">VMs</span>
+        </div>
+      </div>
+
+      <div class="q-row">
+        <span class="q-num">2</span>
+        <div><div class="q-text">vCPUs</div><div class="q-hint">Powered-on VMs only</div></div>
+        <div class="q-input">
+          <input type="number" id="inp-vcpu" placeholder="e.g. 100" min="0" oninput="calcSize()">
+          <span class="unit">vCPUs</span>
+        </div>
+      </div>
+
+      <div class="q-row">
+        <span class="q-num">3</span>
+        <div><div class="q-text">Memory</div><div class="q-hint">Total GB of memory</div></div>
+        <div class="q-input">
+          <input type="number" id="inp-mem" placeholder="e.g. 200" min="0" oninput="calcSize()">
+          <span class="unit">GB</span>
+        </div>
+      </div>
+
+      <div class="q-row">
+        <span class="q-num">4</span>
+        <div><div class="q-text">Capacity</div><div class="q-hint">Total useable storage required</div></div>
+        <div class="q-input">
+          <input type="number" id="inp-cap" placeholder="e.g. 10" min="0" oninput="calcSize()">
+          <span class="unit">TiB</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION C: CLUSTER FEATURES ── -->
+  <div class="section-card">
+    <div class="section-head">
+      <span class="section-num">C</span>
+      <span class="section-title">Cluster Feature Functionality / Licensing</span>
+    </div>
+    <div class="section-body">
+
+      <div class="q-row">
+        <span class="q-num">1</span>
+        <div><div class="q-text">MicroSegmentation</div><div class="q-hint">Network microsegmentation required?</div></div>
+        <div class="q-input">
+          <select id="feat-microseg" onchange="calcSize()">
+            <option value="">— Select —</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="q-row">
+        <span class="q-num">2</span>
+        <div><div class="q-text">1 HR RPO — No Advanced Orchestration</div><div class="q-hint">Standard replication, 1-hour RPO</div></div>
+        <div class="q-input">
+          <select id="feat-rpo" onchange="calcSize()">
+            <option value="">— Select —</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="q-row">
+        <span class="q-num">3</span>
+        <div><div class="q-text">DRO / Near Sync / Sync</div><div class="q-hint">Advanced DR orchestration or sync replication</div></div>
+        <div class="q-input">
+          <select id="feat-dro" onchange="calcSize()">
+            <option value="">— Select —</option>
+            <option>Yes — DRO</option>
+            <option>Yes — Near Sync</option>
+            <option>Yes — Sync</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION D: AUTOMATION ── -->
+  <div class="section-card">
+    <div class="section-head">
+      <span class="section-num">D</span>
+      <span class="section-title">Automation Feature Functionality / Licensing</span>
+    </div>
+    <div class="section-body">
+
+      <div class="q-row">
+        <span class="q-num">1</span>
+        <div><div class="q-text">Reporting / VM Analytics / Low-Code Ops</div><div class="q-hint">NCM analytics and operations features</div></div>
+        <div class="q-input">
+          <select id="feat-reporting" onchange="calcSize()">
+            <option value="">— Select —</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="q-row">
+        <span class="q-num">2</span>
+        <div><div class="q-text">Self Service / Governance / IaaS Blueprints</div><div class="q-hint">NCM Pro — IaaS Blueprints, Self-Service Portal, Cost Governance</div></div>
+        <div class="q-input">
+          <select id="feat-selfservice" onchange="calcSize()">
+            <option value="">— Select —</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="q-row">
+        <span class="q-num">3</span>
+        <div><div class="q-text">App Lifecycle / Security Central / Multi-Cloud</div><div class="q-hint">NCM Ultimate — Multi-VM Blueprints, Security Central, Multi-cloud Orchestration</div></div>
+        <div class="q-input">
+          <select id="feat-ultimate" onchange="calcSize()">
+            <option value="">— Select —</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── NOTES ── -->
+  <div class="section-card">
+    <div class="section-head">
+      <span class="section-num">—</span>
+      <span class="section-title">Additional Notes / Next Steps</span>
+    </div>
+    <div class="section-body" style="padding:16px 20px;">
+      <textarea style="width:100%;border:1.5px solid var(--rule);border-radius:var(--radius);padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);min-height:80px;resize:vertical;outline:none;" placeholder="Any additional context, next steps, or follow-up items…"></textarea>
+    </div>
+  </div>
+
+</div><!-- /doc-body -->
+
+<button id="scroll-up-btn" onclick="document.getElementById('result-card').scrollIntoView({behavior:'smooth'})"
+  style="position:fixed;bottom:80px;right:24px;background:#6d28d9;color:white;border:none;border-radius:24px;padding:10px 18px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(107,33,168,0.4);z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.25s,transform 0.2s;">
+  ↑ &nbsp;View Sizing Results
+</button>
+
+<!-- PRINT BAR -->
+<div class="print-bar">
+  <span class="print-hint" id="pdf-hint">Click Export to PDF to save a clean copy</span>
+  <button class="btn-reset" onclick="resetForm()">Clear Form</button>
+  <button class="btn-print" onclick="exportPDF()" id="pdf-btn">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+    Export to PDF
+  </button>
+</div>
+
+<script>
+// Thresholds from spreadsheet
+const THRESHOLDS = {
+  small:  { vcpu: 130, mem: 910,  cap: 24,  nodes: 3, model: 'NX-1175S-G10 (3 nodes)' },
+  medium: { vcpu: 350, mem: 1382, cap: 73,  nodes: 4, model: 'NX-1175S-G10 (4 nodes)' },
+  large:  { vcpu: 478, mem: 2894, cap: 110, nodes: 4, model: 'NX-8170-G10 (4 nodes)' }
+};
+
+function calcSize() {
+  const vcpu = parseFloat(document.getElementById('inp-vcpu').value) || null;
+  const mem  = parseFloat(document.getElementById('inp-mem').value)  || null;
+  const cap  = parseFloat(document.getElementById('inp-cap').value)  || null;
+
+  const enc       = '';
+  const microseg  = document.getElementById('feat-microseg').value;
+  const rpo       = document.getElementById('feat-rpo').value;
+  const dro       = document.getElementById('feat-dro').value;
+  const reporting = document.getElementById('feat-reporting').value;
+  const selfserv  = document.getElementById('feat-selfservice').value;
+  const sql       = '';
+
+  const hasResources = vcpu !== null || mem !== null || cap !== null;
+
+  // Show/hide result card
+  const card = document.getElementById('result-card');
+  card.classList.toggle('visible', hasResources);
+
+  if (!hasResources) { resetHighlight(); return; }
+
+  // Determine bundle size (worst-case across all entered metrics)
+  let bundle = 'Small';
+  let drivers = [];
+
+  const checks = [
+    { val: vcpu, thresholds: [130, 350, 478], label: 'vCPUs' },
+    { val: mem,  thresholds: [910, 1382, 2894], label: 'Memory' },
+    { val: cap,  thresholds: [24, 73, 110], label: 'Capacity' }
+  ];
+
+  let sizeIdx = 0; // 0=small,1=medium,2=large
+  checks.forEach(c => {
+    if (c.val === null) return;
+    if (c.val > c.thresholds[1]) { if (sizeIdx < 2) { sizeIdx = 2; drivers = [c.label]; } }
+    else if (c.val > c.thresholds[0]) { if (sizeIdx < 1) { sizeIdx = 1; drivers = [c.label]; } else if (sizeIdx === 1) drivers.push(c.label); }
+    else { if (sizeIdx === 0) drivers.push(c.label); }
+  });
+
+  const sizeNames = ['Small', 'Medium', 'Large'];
+  bundle = sizeNames[sizeIdx];
+  const t = THRESHOLDS[bundle.toLowerCase()];
+
+  document.getElementById('res-bundle').textContent = bundle + ' Bundle';
+  document.getElementById('res-nodes').textContent = t.nodes + ' Nodes';
+  document.getElementById('res-model').textContent = t.model;
+
+  const overLarge = (vcpu && vcpu > 478) || (mem && mem > 2894) || (cap && cap > 110);
+  if (overLarge) {
+    document.getElementById('res-bundle').textContent = 'Custom / Oversized';
+    document.getElementById('res-driver').textContent = 'Exceeds Large thresholds — ISE sizing required';
+  } else {
+    document.getElementById('res-driver').textContent = 'Driven by: ' + (drivers.join(', ') || '—');
+  }
+
+  // NCI License logic
+  const hasDRO = dro.startsWith('Yes');
+  const needsULT = enc === 'Yes' || microseg === 'Yes' || hasDRO;
+  const needsProRep = rpo === 'Yes' && !needsULT;
+  let nci, nciReason;
+  if (needsULT) {
+    nci = 'NCI Ultimate';
+    let r = [];
+    if (enc === 'Yes') r.push('Encryption');
+    if (microseg === 'Yes') r.push('MicroSeg');
+    if (hasDRO) r.push(dro.replace('Yes — ', ''));
+    nciReason = r.join(', ') + ' selected';
+  } else if (needsProRep) {
+    nci = 'NCI Pro w/ Adv Replication';
+    nciReason = '1HR RPO selected';
+  } else {
+    nci = 'NCI Starter';
+    nciReason = 'No advanced features selected';
+  }
+  document.getElementById('res-nci').textContent = nci;
+  document.getElementById('res-nci-reason').textContent = nciReason;
+
+  const ultimate = document.getElementById('feat-ultimate').value;
+
+  // NCM License logic
+  let ncm, ncmReason;
+  if (ultimate === 'Yes') {
+    ncm = 'NCM Ultimate';
+    ncmReason = 'App Lifecycle / Security Central / Multi-Cloud selected';
+  } else if (selfserv === 'Yes') {
+    ncm = 'NCM Pro';
+    ncmReason = 'Self Service / Governance selected';
+  } else if (reporting === 'Yes') {
+    ncm = 'NCM Starter';
+    ncmReason = 'Reporting / VM Analytics selected';
+  } else {
+    ncm = 'No NCM';
+    ncmReason = 'No automation features selected';
+  }
+  document.getElementById('res-ncm').textContent = ncm;
+  document.getElementById('res-ncm-reason').textContent = ncmReason;
+
+  // SQL warning
+
+
+  // Highlight diagram box
+  highlightBox(bundle.toLowerCase());
+}
+
+function highlightBox(size) {
+  ['small','medium','large'].forEach(s => {
+    document.getElementById('box-' + s).classList.toggle('active', s === size);
+  });
+}
+function resetHighlight() {
+  ['small','medium','large'].forEach(s => document.getElementById('box-' + s).classList.remove('active'));
+}
+
+function checkLogin() {
+  const pw = document.getElementById('login-password').value;
+  if (pw === 'Ntnx1') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.body.classList.remove('locked');
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-password').value = '';
+  }
+}
+
+function resetForm() {
+  if (!confirm('Clear all form data?')) return;
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+  document.getElementById('result-card').classList.remove('visible');
+  document.getElementById('feat-ultimate').selectedIndex = 0;
+  resetHighlight();
+}
+
+async function exportPDF() {
+  const btn = document.getElementById('pdf-btn');
+  const hint = document.getElementById('pdf-hint');
+  btn.textContent = 'Generating...';
+  btn.disabled = true;
+  hint.textContent = 'Please wait...';
+
+  // Hide print bar during capture
+  document.querySelector('.print-bar').style.display = 'none';
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const element = document.body;
+
+    const canvas = await html2canvas(element, {
+      scale: 1.5,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#f8f7fc'
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    const imgWidth = canvas.width;
+    const imgHeight = canvas.height;
+
+    // One tall page — no page breaks
+    const pdfWidth = 210; // A4 width in mm
+    const pdfHeight = (imgHeight * pdfWidth) / imgWidth;
+
+    const pdf = new jsPDF({
+      orientation: pdfHeight > pdfWidth ? 'portrait' : 'landscape',
+      unit: 'mm',
+      format: [pdfWidth, pdfHeight]
+    });
+
+    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+
+    // Get customer name for filename
+    const customer = document.getElementById('customer-name').value || 'Discovery';
+    const date = new Date().toLocaleDateString('en-US', {month:'2-digit', day:'2-digit', year:'2-digit'}).replace(/\//g,'-');
+    pdf.save(`${customer} - Inside Discovery Form - ${date}.pdf`);
+
+    // Log to Google Sheets silently in background
+    const payload = {
+      customer: document.getElementById('customer-name').value || '',
+      oppId: document.getElementById('opp-id').value || '',
+      partnerName: document.getElementById('partner-name').value || '',
+      iae: document.getElementById('iae-name').value || '',
+      ise: document.getElementById('ise-name').value || '',
+      bundle: document.getElementById('res-bundle')?.textContent || '',
+      nci: document.getElementById('res-nci')?.textContent || '',
+      ncm: document.getElementById('res-ncm')?.textContent || '',
+      hypervisor: document.querySelectorAll('textarea')[0]?.value || '',
+      licenseExpiry: document.querySelectorAll('textarea')[1]?.value || '',
+      hosts: document.querySelectorAll('textarea')[2]?.value || '',
+      storage: document.querySelectorAll('textarea')[3]?.value || '',
+      hwLife: document.querySelectorAll('textarea')[4]?.value || '',
+      vmCount: document.querySelectorAll('textarea')[5]?.value || '',
+      drStrategy: document.querySelectorAll('textarea')[6]?.value || '',
+      sqlUsage: document.querySelectorAll('textarea')[7]?.value || '',
+      userVMs: document.getElementById('inp-vms')?.value || '',
+      vcpus: document.getElementById('inp-vcpu')?.value || '',
+      memory: document.getElementById('inp-mem')?.value || '',
+      capacity: document.getElementById('inp-cap')?.value || '',
+      encryption: document.getElementById('feat-enc')?.value || '',
+      microseg: document.getElementById('feat-microseg')?.value || '',
+      rpo: document.getElementById('feat-rpo')?.value || '',
+      dro: document.getElementById('feat-dro')?.value || '',
+      reporting: document.getElementById('feat-reporting')?.value || '',
+      selfservice: document.getElementById('feat-selfservice')?.value || '',
+      ultimate: document.getElementById('feat-ultimate')?.value || '',
+      sqlVMs: document.getElementById('feat-sql')?.value || '',
+      notes: document.querySelectorAll('textarea')[8]?.value || ''
+    };
+    fetch('https://script.google.com/macros/s/AKfycbxSmjXkcllkpv5SQKniGMZHq2_MDSrgHnIrREx8FPrdo5sUopLvtoViWEzc8Yd0mBKo/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+
+  } catch(e) {
+    alert('Export failed. Please try Safari → File → Export as PDF instead.');
+  }
+
+  // Restore print bar
+  document.querySelector('.print-bar').style.display = '';
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg> Export to PDF`;
+  btn.disabled = false;
+  hint.textContent = 'Click Export to PDF to save a clean copy';
+}
+window.addEventListener('scroll', function() {
+  const btn = document.getElementById('scroll-up-btn');
+  if (!btn) return;
+  if (window.scrollY > 300) {
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'all';
+    btn.style.transform = 'translateY(0)';
+  } else {
+    btn.style.opacity = '0';
+    btn.style.pointerEvents = 'none';
+  }
+});
+
+function toggleDD(id) {
+  const dd = document.getElementById(id + '-dd');
+  const isOpen = dd.classList.contains('open');
+  document.querySelectorAll('.custom-dd.open').forEach(d => d.classList.remove('open'));
+  if (!isOpen) {
+    dd.classList.add('open');
+    setTimeout(() => dd.querySelector('.dd-search').focus(), 50);
+  }
+}
+
+function filterDD(id, query) {
+  query = query.toLowerCase();
+  document.querySelectorAll('#' + id + '-items .dd-item').forEach(item => {
+    item.classList.toggle('hidden', !item.textContent.toLowerCase().includes(query));
+  });
+}
+
+function selectDD(id, value) {
+  const otherId = id.replace('-name', '') + '-other';
+  const otherInput = document.getElementById(otherId);
+  if (value === 'Other') {
+    document.getElementById(id).value = '';
+    document.getElementById(id + '-label').textContent = 'Type a name...';
+    document.getElementById(id + '-label').style.color = 'var(--nutanix)';
+    if (otherInput) {
+      otherInput.style.display = 'block';
+      otherInput.focus();
+      // When done typing, update trigger label and hide box
+      otherInput.onblur = function() {
+        const typed = otherInput.value.trim();
+        if (typed) {
+          document.getElementById(id).value = typed;
+          document.getElementById(id + '-label').textContent = typed;
+          document.getElementById(id + '-label').style.color = 'var(--ink)';
+          otherInput.style.display = 'none';
+        }
+      };
+      otherInput.onkeydown = function(e) {
+        if (e.key === 'Enter') { otherInput.blur(); }
+      };
+    }
+  } else {
+    document.getElementById(id).value = value;
+    document.getElementById(id + '-label').textContent = value;
+    document.getElementById(id + '-label').style.color = 'var(--ink)';
+    if (otherInput) { otherInput.style.display = 'none'; otherInput.value = ''; }
+  }
+  document.getElementById(id + '-dd').classList.remove('open');
+  calcSize();
+}
+
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.custom-dd.open').forEach(dd => {
+    if (!dd.contains(e.target)) dd.classList.remove('open');
+  });
+});
+
+</script>
+</body>
+</html>
